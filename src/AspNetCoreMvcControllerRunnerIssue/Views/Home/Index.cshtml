@@ -1,0 +1,15 @@
+﻿@using AspNetCoreMvcControllerRunnerIssue.Test
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>AspNetCoreControllerRunner</title>
+</head>
+<body>
+    <h1>Showing output from multiple controllers</h1>
+    <div>
+        @await Html.Render().RenderControllerAsync("TestOne", "Index")
+        @await Html.Render().RenderControllerAsync("TestTwo", "Index")
+    </div>
+</body>
+</html>
