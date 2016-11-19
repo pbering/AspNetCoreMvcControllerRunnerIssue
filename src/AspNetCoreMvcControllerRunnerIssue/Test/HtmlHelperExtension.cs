@@ -1,36 +1,28 @@
-﻿using System.IO;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Html;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ViewComponents;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace AspNetCoreMvcControllerRunnerIssue.Test
 {
     public static class HtmlHelperExtension
     {
-        public static RenderViewComponentHtmlHelper Render(this IHtmlHelper helper)
+        public static async Task<IHtmlContent> RenderPlaceholderAsync(this IHtmlHelper htmlHelper)
         {
-            return new RenderViewComponentHtmlHelper(helper);
-        }
-    }
+            var helper = (DefaultViewComponentHelper)htmlHelper.ViewContext.HttpContext.RequestServices.GetRequiredService<IViewComponentHelper>();
 
-    public class RenderViewComponentHtmlHelper
-    {
-        private static readonly ViewComponentRunner _runner = new ViewComponentRunner();
-        private readonly ViewContext _viewContext;
+            helper.Contextualize(htmlHelper.ViewContext);
 
-        public RenderViewComponentHtmlHelper(IHtmlHelper htmlHelper)
-        {
-            _viewContext = htmlHelper.ViewContext;
-        }
+            var builder = new HtmlContentBuilder();
 
-        public async Task<HtmlString> RenderViewComponentAsync(string viewComponentName)
-        {
-            using (var writer = new StringWriter())
+            foreach (var component in new[] {"TestOne", "TestTwo"})
             {
-                await _runner.Execute(viewComponentName, writer, _viewContext);
-
-                return new HtmlString(writer.ToString());
+                builder.AppendHtml(await helper.InvokeAsync(component));
             }
+
+            return builder;
         }
     }
 }

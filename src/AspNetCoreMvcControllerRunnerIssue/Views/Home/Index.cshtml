@@ -6,12 +6,9 @@
     <title>AspNetCoreControllerRunner</title>
 </head>
 <body>
-    <h1>Showing output from multiple controllers</h1>
+    <h1>Showing output from multiple components...</h1>
     <div>
-        @await Html.Render().RenderViewComponentAsync("TestOne")
-        @await Html.Render().RenderViewComponentAsync("TestTwo")
+        @await Html.RenderPlaceholderAsync()
     </div>
-    <h2>Inline</h2>
-    @await Component.InvokeAsync("TestTwo")
 </body>
 </html>
