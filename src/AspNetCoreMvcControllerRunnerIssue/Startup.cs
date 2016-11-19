@@ -24,7 +24,6 @@ namespace AspNetCoreMvcControllerRunnerIssue
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
-            services.AddSingleton<ViewComponentRunner>();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)

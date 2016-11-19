@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace AspNetCoreMvcControllerRunnerIssue.Test
 {
@@ -16,13 +15,12 @@ namespace AspNetCoreMvcControllerRunnerIssue.Test
 
     public class RenderViewComponentHtmlHelper
     {
-        private readonly ViewComponentRunner _runner;
+        private static readonly ViewComponentRunner _runner = new ViewComponentRunner();
         private readonly ViewContext _viewContext;
 
         public RenderViewComponentHtmlHelper(IHtmlHelper htmlHelper)
         {
             _viewContext = htmlHelper.ViewContext;
-            _runner = _viewContext.HttpContext.RequestServices.GetRequiredService<ViewComponentRunner>();
         }
 
         public async Task<HtmlString> RenderViewComponentAsync(string viewComponentName)
