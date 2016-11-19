@@ -8,8 +8,10 @@
 <body>
     <h1>Showing output from multiple controllers</h1>
     <div>
-        @await Html.Render().RenderControllerAsync("TestOne", "Index")
-        @await Html.Render().RenderControllerAsync("TestTwo", "Index")
+        @await Html.Render().RenderViewComponentAsync("TestOne")
+        @await Html.Render().RenderViewComponentAsync("TestTwo")
     </div>
+    <h2>Inline</h2>
+    @await Component.InvokeAsync("TestTwo")
 </body>
 </html>

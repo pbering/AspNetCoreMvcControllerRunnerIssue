@@ -1,7 +1,6 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Html;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -9,28 +8,28 @@ namespace AspNetCoreMvcControllerRunnerIssue.Test
 {
     public static class HtmlHelperExtension
     {
-        public static RenderControllerHtmlHelper Render(this IHtmlHelper helper)
+        public static RenderViewComponentHtmlHelper Render(this IHtmlHelper helper)
         {
-            return new RenderControllerHtmlHelper(helper);
+            return new RenderViewComponentHtmlHelper(helper);
         }
     }
 
-    public class RenderControllerHtmlHelper
+    public class RenderViewComponentHtmlHelper
     {
-        private readonly HttpContext _context;
-        private readonly ControllerRunner _runner;
+        private readonly ViewComponentRunner _runner;
+        private readonly ViewContext _viewContext;
 
-        public RenderControllerHtmlHelper(IHtmlHelper htmlHelper)
+        public RenderViewComponentHtmlHelper(IHtmlHelper htmlHelper)
         {
-            _context = htmlHelper.ViewContext.HttpContext;
-            _runner = _context.RequestServices.GetRequiredService<ControllerRunner>();
+            _viewContext = htmlHelper.ViewContext;
+            _runner = _viewContext.HttpContext.RequestServices.GetRequiredService<ViewComponentRunner>();
         }
 
-        public async Task<HtmlString> RenderControllerAsync(string controller, string action)
+        public async Task<HtmlString> RenderViewComponentAsync(string viewComponentName)
         {
             using (var writer = new StringWriter())
             {
-                await _runner.Execute(_context, controller, action, writer);
+                await _runner.Execute(viewComponentName, writer, _viewContext);
 
                 return new HtmlString(writer.ToString());
             }
